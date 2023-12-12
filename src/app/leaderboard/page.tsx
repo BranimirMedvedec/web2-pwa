@@ -11,9 +11,10 @@ export default function Leaderboard() {
 	const itemsPerPage = 10
 	const [totalPages, setTotalPages] = useState(0)
 
-	const handlePageChange = (page: number) => () => {
+	const onPageChange = (page: number) => {
 		if (page < 1 || page > totalPages) return
 		setCurrentPage(page)
+		console.log("page", page)
 	}
 
 	useEffect(() => {
@@ -30,7 +31,6 @@ export default function Leaderboard() {
 
 			try {
 				const totalScores = await getTotalScores()
-				console.log(totalScores)
 				setTotalPages(Math.ceil((totalScores ?? 0) / itemsPerPage))
 			} catch (error) {
 				console.error(error)
@@ -67,11 +67,12 @@ export default function Leaderboard() {
 					</tbody>
 				</table>
 			</div>
+
 			<div className="mt-6">
 				<Pagination
 					currentPage={currentPage}
 					totalPages={totalPages}
-					onPageChange={handlePageChange}
+					onPageChange={onPageChange}
 				/>
 			</div>
 		</div>

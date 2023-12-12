@@ -9,16 +9,12 @@ export default function Pagination({
 	totalPages,
 	onPageChange,
 }: PaginationProps) {
-	const handlePageChange = (page: number) => {
-		if (page < 1 || page > totalPages) return
-		onPageChange(page)
-	}
-
 	return (
 		<div className="pagination pagination-rounded">
 			<button
 				className="btn"
-				onClick={() => handlePageChange(currentPage - 1)}>
+				onClick={() => onPageChange(currentPage - 1)}
+				disabled={currentPage === 1}>
 				<svg
 					width="18"
 					height="18"
@@ -39,13 +35,25 @@ export default function Pagination({
 					className={`btn ${
 						currentPage === page + 1 ? "btn-active" : ""
 					}`}
-					onClick={() => handlePageChange(page + 1)}>
+					onClick={() => onPageChange(page + 1)}>
 					{page + 1}
 				</button>
 			))}
+
+			{/* {Array.from({ length: totalPages }, (_, index) => (
+				<button
+					key={index + 1}
+					className={`btn ${
+						currentPage === index + 1 ? "btn-active" : ""
+					}`}
+					onClick={() => onPageChange(index + 1)}>
+					{index + 1}
+				</button>
+			))} */}
 			<button
 				className="btn"
-				onClick={() => handlePageChange(currentPage + 1)}>
+				onClick={() => onPageChange(currentPage + 1)}
+				disabled={currentPage === totalPages}>
 				<svg
 					width="18"
 					height="18"

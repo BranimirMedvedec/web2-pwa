@@ -13,7 +13,6 @@ export default async function getLeaderboard(
 	page: number,
 	itemsPerPage: number
 ) {
-	console.log(page, itemsPerPage)
 	try {
 		if (page === 1) {
 			const first = query(

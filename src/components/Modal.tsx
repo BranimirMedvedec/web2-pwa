@@ -1,4 +1,5 @@
 import { useState } from "react"
+import shareScore from "@/lib/shareScore"
 
 type ModalProps = {
 	isOpen: boolean
@@ -22,6 +23,10 @@ export default function Modal({
 
 	const handleCheckboxChange = () => {
 		if (isOpen) onClose()
+	}
+
+	const handleScoreShare = () => {
+		shareScore(score)
 	}
 
 	return (
@@ -57,6 +62,12 @@ export default function Modal({
 							className="btn btn-primary mt-4"
 							type="submit">
 							Submit
+						</button>
+						<button
+							className="btn btn-primary"
+							onClick={handleScoreShare}
+							type="button">
+							Share
 						</button>
 					</form>
 				</div>
