@@ -1,11 +1,15 @@
 export default function shareScore(score: number) {
 	const shareData = {
-		title: "I scored " + score + " on the Web2 PWA Clicker Game!",
-		text: "Try to beat my score",
+		text:
+			"I scored " +
+			score +
+			" on the Web2 PWA Clicker Game! Try to beat my score!",
+		// text: "Try to beat my score",
 		url: "https://web2-pwa-clicker.vercel.app/clicker",
+		files: [],
 	}
 
-	if (navigator.share) {
+	if (navigator.canShare(shareData)) {
 		navigator
 			.share(shareData)
 			.then(() => {
