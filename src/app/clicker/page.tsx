@@ -1,6 +1,8 @@
 "use client"
 import Modal from "@/components/Modal"
 import { useEffect, useState } from "react"
+import { Score } from "@/types/ScoreType"
+import addNewScore from "@/lib/addNewScore"
 
 export default function Clicker() {
 	const [clicks, setClicks] = useState(0)
@@ -41,13 +43,15 @@ export default function Clicker() {
 		setGameStarted(false)
 	}
 
-	const handleModalSubmit = (name: string) => {
-		const newScore = {
+	const handleModalSubmit = async (name: string) => {
+		const newScore: Score = {
 			name,
-			clicks,
+			score: clicks,
+			date: new Date().toISOString(),
 		}
 		console.log("newScore", newScore)
-		// update leaderboard
+
+		await addNewScore(newScore)
 
 		handleModalClose()
 	}
