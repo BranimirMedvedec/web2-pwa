@@ -1,0 +1,79 @@
+"use client"
+import Modal from "@/components/Modal"
+import { useEffect, useState } from "react"
+
+export default function Clicker() {
+	const [clicks, setClicks] = useState(0)
+	const [time, setTime] = useState(20)
+	const [gameStarted, setGameStarted] = useState(false)
+	const [gameOver, setGameOver] = useState(false)
+	const [showModal, setShowModal] = useState(false)
+
+	useEffect(() => {
+		if (!gameStarted || gameOver) return
+
+		if (time > 0 && !gameOver) {
+			const timer = setInterval(() => {
+				setTime((prevTime) => Math.max(0, prevTime - 1))
+			}, 100)
+
+			return () => clearInterval(timer)
+		} else if (time === 0 && !gameOver) {
+			setGameOver(true)
+			setShowModal(true)
+		}
+	}, [gameOver, time, gameStarted])
+
+	const handleClick = () => {
+		if (!gameOver && time > 0) {
+			setClicks(clicks + 1)
+			if (!gameStarted) {
+				setGameStarted(true)
+			}
+		}
+	}
+
+	const handleModalClose = () => {
+		setClicks(0)
+		setTime(20)
+		setGameOver(false)
+		setShowModal(false)
+		setGameStarted(false)
+	}
+
+	const handleModalSubmit = (name: string) => {
+		const newScore = {
+			name,
+			clicks,
+		}
+		console.log("newScore", newScore)
+		// update leaderboard
+
+		handleModalClose()
+	}
+
+	return (
+		<div className="flex flex-col items-center justify-center min-h-screen">
+			<h1 className="text-4xl font-bold mb-2">Clicker</h1>
+			<p className="text-xl mb-4">
+				Click the button as many times as you can in 10 seconds!
+			</p>
+			<p className="text-lg mb-2">Time: {(time / 10).toFixed(1)}</p>
+			<p className="text-lg mb-2">Clicks: {clicks}</p>
+
+			<button
+				className="btn btn-primary btn-circle px-4 py-2 w-32 h-32 text-4xl"
+				onClick={handleClick}
+				disabled={time === 0}>
+				{clicks}
+			</button>
+
+			<Modal
+				isOpen={showModal}
+				score={clicks}
+				onClose={handleModalClose}
+				onSubmit={handleModalSubmit}
+			/>
+		</div>
+	)
+}
