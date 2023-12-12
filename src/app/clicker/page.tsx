@@ -3,6 +3,7 @@ import Modal from "@/components/Modal"
 import { useEffect, useState } from "react"
 import { Score } from "@/types/ScoreType"
 import addNewScore from "@/lib/addNewScore"
+import { Timestamp } from "firebase/firestore"
 
 export default function Clicker() {
 	const [clicks, setClicks] = useState(0)
@@ -47,10 +48,8 @@ export default function Clicker() {
 		const newScore: Score = {
 			name,
 			score: clicks,
-			date: new Date().toISOString(),
+			date: Timestamp.now(),
 		}
-		console.log("newScore", newScore)
-
 		await addNewScore(newScore)
 
 		handleModalClose()

@@ -2,21 +2,41 @@
 import getLeaderboard from "@/lib/getLeaderboard"
 import { useEffect, useState } from "react"
 import { Score } from "@/types/ScoreType"
+import Pagination from "@/components/Pagination"
+import getTotalScores from "@/lib/getTotalScores"
 
 export default function Leaderboard() {
 	const [leaderboard, setLeaderboard] = useState<Score[]>([])
+	const [currentPage, setCurrentPage] = useState(1)
+	const itemsPerPage = 10
+	const [totalPages, setTotalPages] = useState(0)
+
+	const handlePageChange = (page: number) => () => {
+		if (page < 1 || page > totalPages) return
+		setCurrentPage(page)
+	}
 
 	useEffect(() => {
-		async function fetchLeaderboard() {
+		;(async () => {
 			try {
-				const leaderboardData = (await getLeaderboard()) as Score[]
-				setLeaderboard(leaderboardData)
+				const leaderboardData = await getLeaderboard(
+					currentPage,
+					itemsPerPage
+				)
+				setLeaderboard(leaderboardData as Score[])
 			} catch (error) {
 				console.error(error)
 			}
-		}
-		fetchLeaderboard()
-	}, [])
+
+			try {
+				const totalScores = await getTotalScores()
+				console.log(totalScores)
+				setTotalPages(Math.ceil((totalScores ?? 0) / itemsPerPage))
+			} catch (error) {
+				console.error(error)
+			}
+		})()
+	}, [currentPage])
 
 	return (
 		<div className="flex flex-col items-center justify-start min-h-screen">
@@ -33,18 +53,26 @@ export default function Leaderboard() {
 						</tr>
 					</thead>
 					<tbody>
-						{leaderboard.map((score, index) => (
-							<tr key={index}>
-								<td className="px-4 py-2">{index + 1}</td>
-								<td className="px-4 py-2">{score.name}</td>
-								<td className="px-4 py-2">{score.score}</td>
-								<td className="px-4 py-2">
-									{new Date(score.date).toLocaleDateString()}
-								</td>
-							</tr>
-						))}
+						{leaderboard &&
+							leaderboard.map((score, index) => (
+								<tr key={index}>
+									<td className="px-4 py-2">{index + 1}</td>
+									<td className="px-4 py-2">{score.name}</td>
+									<td className="px-4 py-2">{score.score}</td>
+									<td className="px-4 py-2">
+										{score.date.toDate().toISOString()}
+									</td>
+								</tr>
+							))}
 					</tbody>
 				</table>
+			</div>
+			<div className="mt-6">
+				<Pagination
+					currentPage={currentPage}
+					totalPages={totalPages}
+					onPageChange={handlePageChange}
+				/>
 			</div>
 		</div>
 	)
