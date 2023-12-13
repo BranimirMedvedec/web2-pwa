@@ -46,7 +46,6 @@ export default function Clicker() {
 	}
 
 	const handleModalSubmit = async (name: string) => {
-		console.log("handleModalSubmit is called")
 		const newScore: Score = {
 			name,
 			score: clicks,
@@ -54,10 +53,6 @@ export default function Clicker() {
 		}
 
 		let isHighScore = false
-		console.log("navigator.onLine: ", navigator.onLine)
-		console.log("Notification.permission: ", Notification.permission)
-		console.log("high score: ", isHighScore)
-		console.log("newScore: ", newScore)
 
 		if (navigator.onLine) {
 			try {
@@ -65,7 +60,6 @@ export default function Clicker() {
 				if (currentHighScore === undefined) isHighScore = true
 				else isHighScore = newScore.score > currentHighScore?.score
 
-				console.log("isHighScore: ", isHighScore)
 				// Request notification permission
 				if (isHighScore && Notification.permission !== "granted") {
 					console.log("requesting notification permission")
