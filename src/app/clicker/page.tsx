@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Score } from "@/types/ScoreType"
 import addNewScore from "@/lib/addNewScore"
 import { Timestamp } from "firebase/firestore"
+import getHighScore from "@/lib/getHighScore"
 
 export default function Clicker() {
 	const [clicks, setClicks] = useState(0)
@@ -45,17 +46,51 @@ export default function Clicker() {
 	}
 
 	const handleModalSubmit = async (name: string) => {
+		console.log("handleModalSubmit is called")
 		const newScore: Score = {
 			name,
 			score: clicks,
 			date: Timestamp.now(),
 		}
 
-		if (navigator.onLine) {
-			// run sync event here
+		let isHighScore = false
+		console.log("navigator.onLine: ", navigator.onLine)
+		console.log("Notification.permission: ", Notification.permission)
+		console.log("high score: ", isHighScore)
+		console.log("newScore: ", newScore)
 
+		if (navigator.onLine) {
 			try {
-				
+				let currentHighScore = await getHighScore()
+				if (currentHighScore === undefined) isHighScore = true
+				else isHighScore = newScore.score > currentHighScore?.score
+
+				console.log("isHighScore: ", isHighScore)
+				// Request notification permission
+				if (isHighScore && Notification.permission !== "granted") {
+					console.log("requesting notification permission")
+					const permission = await Notification.requestPermission()
+					if (permission !== "granted") {
+						console.warn("Notification permission denied.")
+					}
+				}
+
+				if (isHighScore) {
+					console.log("new high score!")
+					if (
+						"serviceWorker" in navigator &&
+						navigator.serviceWorker.controller
+					) {
+						console.log("sending message to service worker")
+						navigator.serviceWorker.controller.postMessage({
+							type: "newHighScore",
+							username: newScore.name,
+							score: newScore.score,
+						})
+					} else {
+						console.log("no service worker")
+					}
+				}
 
 				await addNewScore(newScore)
 			} catch (err) {
