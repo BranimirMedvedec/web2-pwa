@@ -1,45 +1,7 @@
-// const installEvent = () => {
-// 	self.addEventListener("install", () => {
-// 		console.log("service worker installed")
-// 	})
-// }
-// installEvent()
-
-// const activateEvent = () => {
-// 	self.addEventListener("activate", () => {
-// 		console.log("service worker activated")
-// 	})
-// }
-// activateEvent()
-
-// const cacheName = "v1"
-// const cacheableUrls = ["/", "/clicker", "/leaderboard"]
-
-// const cacheClone = async (e) => {
-// 	const res = await fetch(e.request)
-// 	const resClone = res.clone()
-
-// 	const cache = await caches.open(cacheName)
-// 	await cache.put(e.request, resClone)
-// 	return res
-// }
-
-// const fetchEvent = () => {
-// 	self.addEventListener("fetch", (e) => {
-// 		e.respondWith(
-// 			cacheClone(e)
-// 				.catch(() => caches.match(e.request))
-// 				.then((res) => res)
-// 		)
-// 	})
-// }
-
-// fetchEvent()
-
-const CACHE_NAME = "my-cache"
-
+const CACHE_NAME = "pwa-clicker-cache"
 const urlsToCache = ["/", "/clicker", "/leaderboard"]
 
+// Install a service worker
 self.addEventListener("install", (event) => {
 	event.waitUntil(
 		caches.open(CACHE_NAME).then((cache) => {
@@ -48,10 +10,49 @@ self.addEventListener("install", (event) => {
 	)
 })
 
+// Cache and return requests
 self.addEventListener("fetch", (event) => {
 	event.respondWith(
 		caches.match(event.request).then((response) => {
-			return response || fetch(event.request)
+			// Cache hit - return response
+			if (response) {
+				return response
+			}
+
+			// Not in cache - fetch the resurce from the network
+			return fetch(event.request).then((response) => {
+				// Check if we received a valid response
+				if (
+					!response ||
+					response.status !== 200 ||
+					response.type !== "basic"
+				) {
+					return response
+				}
+
+				const responseToCache = response.clone()
+
+				caches.open(CACHE_NAME).then((cache) => {
+					cache.put(event.request, responseToCache)
+				})
+
+				return response
+			})
+		})
+	)
+})
+
+// Activate the service worker and delete old caches
+self.addEventListener("activate", (event) => {
+	event.waitUntil(
+		caches.keys().then((cacheNames) => {
+			return Promise.all(
+				cacheNames.map((cacheName) => {
+					if (cacheName !== CACHE_NAME) {
+						return caches.delete(cacheName)
+					}
+				})
+			)
 		})
 	)
 })

@@ -29,18 +29,7 @@ export default function Pagination({
 					/>
 				</svg>
 			</button>
-			{Array.from(Array(totalPages).keys()).map((page) => (
-				<button
-					key={page}
-					className={`btn ${
-						currentPage === page + 1 ? "btn-active" : ""
-					}`}
-					onClick={() => onPageChange(page + 1)}>
-					{page + 1}
-				</button>
-			))}
-
-			{/* {Array.from({ length: totalPages }, (_, index) => (
+			{Array.from({ length: totalPages }, (_, index) => (
 				<button
 					key={index + 1}
 					className={`btn ${
@@ -49,7 +38,7 @@ export default function Pagination({
 					onClick={() => onPageChange(index + 1)}>
 					{index + 1}
 				</button>
-			))} */}
+			))}
 			<button
 				className="btn"
 				onClick={() => onPageChange(currentPage + 1)}

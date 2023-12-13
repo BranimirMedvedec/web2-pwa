@@ -50,7 +50,17 @@ export default function Clicker() {
 			score: clicks,
 			date: Timestamp.now(),
 		}
-		await addNewScore(newScore)
+
+		if (navigator.onLine) {
+			try {
+				await addNewScore(newScore)
+			} catch (err) {
+				console.error("error adding new score: ", err)
+			}
+		} else {
+			console.log("offline, saving score locally")
+			// TODO: save score to IndexedDB
+		}
 
 		handleModalClose()
 	}

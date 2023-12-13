@@ -14,7 +14,6 @@ export default function Leaderboard() {
 	const onPageChange = (page: number) => {
 		if (page < 1 || page > totalPages) return
 		setCurrentPage(page)
-		console.log("page", page)
 	}
 
 	useEffect(() => {
