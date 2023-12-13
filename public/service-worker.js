@@ -14,14 +14,11 @@ self.addEventListener("install", (event) => {
 self.addEventListener("fetch", (event) => {
 	event.respondWith(
 		caches.match(event.request).then((response) => {
-			// Cache hit - return response
 			if (response) {
 				return response
 			}
 
-			// Not in cache - fetch the resurce from the network
 			return fetch(event.request).then((response) => {
-				// Check if we received a valid response
 				if (
 					!response ||
 					response.status !== 200 ||

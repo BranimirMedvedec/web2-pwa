@@ -52,7 +52,11 @@ export default function Clicker() {
 		}
 
 		if (navigator.onLine) {
+			// run sync event here
+
 			try {
+				
+
 				await addNewScore(newScore)
 			} catch (err) {
 				console.error("error adding new score: ", err)
