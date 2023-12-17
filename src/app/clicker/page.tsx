@@ -8,7 +8,7 @@ import getHighScore from "@/lib/getHighScore"
 
 export default function Clicker() {
 	const [clicks, setClicks] = useState(0)
-	const [time, setTime] = useState(20)
+	const [time, setTime] = useState(50)
 	const [gameStarted, setGameStarted] = useState(false)
 	const [gameOver, setGameOver] = useState(false)
 	const [showModal, setShowModal] = useState(false)
@@ -39,7 +39,7 @@ export default function Clicker() {
 
 	const handleModalClose = () => {
 		setClicks(0)
-		setTime(20)
+		setTime(50)
 		setGameOver(false)
 		setShowModal(false)
 		setGameStarted(false)
@@ -102,7 +102,7 @@ export default function Clicker() {
 		<div className="flex flex-col items-center justify-center min-h-screen">
 			<h1 className="text-4xl font-bold mb-2">Clicker</h1>
 			<p className="text-xl mb-4">
-				Click the button as many times as you can in 10 seconds!
+				Click the button as many times as you can in 5 seconds!
 			</p>
 			<p className="text-lg mb-2">Time: {(time / 10).toFixed(1)}</p>
 			<p className="text-lg mb-2">Clicks: {clicks}</p>
