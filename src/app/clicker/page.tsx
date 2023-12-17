@@ -61,13 +61,6 @@ export default function Clicker() {
 				else isHighScore = newScore.score > currentHighScore?.score
 
 				// Request notification permission
-				if (isHighScore && Notification.permission !== "granted") {
-					console.log("requesting notification permission")
-					const permission = await Notification.requestPermission()
-					if (permission !== "granted") {
-						console.warn("Notification permission denied.")
-					}
-				}
 
 				if (isHighScore) {
 					console.log("new high score!")

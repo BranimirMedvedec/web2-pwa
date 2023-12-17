@@ -40,10 +40,10 @@ export default function Modal({
 			/>
 			<div className="modal">
 				<label className="modal-overlay"></label>
-				<div className="modal-content flex flex-col gap-5">
+				<div className="modal-content flex flex-col gap-5 p-6">
 					<label
 						htmlFor="modal-3"
-						className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+						className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 cursor-pointer"
 						onClick={onClose}>
 						✕
 					</label>
@@ -58,17 +58,19 @@ export default function Modal({
 							value={name}
 							onChange={(e) => setName(e.target.value)}
 						/>
-						<button
-							className="btn btn-primary mt-4"
-							type="submit">
-							Submit
-						</button>
-						<button
-							className="btn btn-primary"
-							onClick={handleScoreShare}
-							type="button">
-							Share
-						</button>
+						<div className="flex flex-col gap-2 mt-4">
+							<button
+								className="btn btn-primary"
+								type="submit">
+								Submit
+							</button>
+							<button
+								className="btn btn-primary"
+								onClick={handleScoreShare}
+								type="button">
+								Share
+							</button>
+						</div>
 					</form>
 				</div>
 			</div>
